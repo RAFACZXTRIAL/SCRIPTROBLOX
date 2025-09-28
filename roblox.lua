@@ -7,12 +7,12 @@
 ]]
 
 -- UBAH INI SESUAI KEINGINANMU
-local Author = "v2.3 Summit with Sibuatan"
+local Author = "v2.3 Summit with Sibuatan - FINAL"
 
 -- CFRAME SUMMIT
 local TARANJANG_CFRAME = CFrame.new(8711.95215, 1637.02124, 1343.46667, 0.375418901, -4.74302198e-09, 0.926855266, 1.80503723e-10, 1, 5.04421527e-09, -0.926855266, -1.72639292e-09, 0.375418901)
 local JAPANESE_CFRAME = CFrame.new(-18.1628742, 1019.05713, 7.24377155, -0.809797227, -9.46244825e-08, 0.586709857, -4.64653951e-08, 1, 9.71467173e-08, -0.586709857, 5.14074365e-08, -0.809797227)
-local SIBUATAN_CFRAME = CFrame.new(5392.64893, 8109.02441, 2202.86572, 0.0890931934, 6.88869548e-08, -0.996023297, -8.87670311e-08, 1, 6.12218756e-08, 0.996023297, 8.29595805e-08, 0.0890931934) -- NEW CFRAME
+local SIBUATAN_CFRAME = CFrame.new(5392.64893, 8109.02441, 2202.86572, 0.0890931934, 6.88869548e-08, -0.996023297, -8.87670311e-08, 1, 6.12218756e-08, 0.996023297, 8.29595805e-08, 0.0890931934) -- CFRAME BARU
 -- ================================================
 
 -- 1. MEMUAT LIBRARY STELLAR
@@ -41,24 +41,21 @@ local teleportsLeftJapanese = 10
 local delayTimeJapanese = 2
 local infiniteJapanese = false 
 
-local runningSibuatan = false -- NEW
-local teleportsLeftSibuatan = 10 -- NEW
-local delayTimeSibuatan = 2 -- NEW
-local infiniteSibuatan = false -- NEW
+local runningSibuatan = false -- BARU
+local teleportsLeftSibuatan = 10 -- BARU
+local delayTimeSibuatan = 2 -- BARU
+local infiniteSibuatan = false -- BARU
 
 -- FUNGSI INTI: MELAKUKAN SATU SIKLUS LOOP
--- Fungsi ini TIDAK BERUBAH. Ia hanya menerima CFrame mana yang akan digunakan.
 local function executeCycle(summitCFrame, delay)
     local success = pcall(function()
         
-        -- Ambil karakter yang SAAT INI ada
         local char = player.Character or player.CharacterAdded:Wait(1)
         if not char then return end 
 
         local root = char:WaitForChild("HumanoidRootPart", 1)
         if not root then return end
         
-        -- Siapkan sinyal untuk menangkap karakter BERIKUTNYA setelah kill
         local newCharWait = player.CharacterAdded:Once() 
         
         -----------------------------------
@@ -100,7 +97,7 @@ end
 local function startTaranjangLoop(count, delay, isInfinite) 
     -- Hentikan loop lain sebelum memulai
     if runningJapanese then stopJapaneseLoop() end
-    if runningSibuatan then stopSibuatanLoop() end -- ADDED CHECK
+    if runningSibuatan then stopSibuatanLoop() end 
     if runningTaranjang then stopTaranjangLoop(); task.wait(delay * 0.5) end
 
     -- Update variabel kontrol
@@ -114,7 +111,6 @@ local function startTaranjangLoop(count, delay, isInfinite)
 
     task.spawn(function()
         while runningTaranjang and (infiniteTaranjang or teleportsLeftTaranjang > 0) do
-            
             executeCycle(TARANJANG_CFRAME, delayTimeTaranjang)
             
             if not infiniteTaranjang and teleportsLeftTaranjang > 0 then
@@ -136,7 +132,7 @@ end
 local function startJapaneseLoop(count, delay, isInfinite) 
     -- Hentikan loop lain sebelum memulai
     if runningTaranjang then stopTaranjangLoop() end
-    if runningSibuatan then stopSibuatanLoop() end -- ADDED CHECK
+    if runningSibuatan then stopSibuatanLoop() end 
     if runningJapanese then stopJapaneseLoop(); task.wait(delay * 0.5) end
 
     -- Update variabel kontrol
@@ -150,7 +146,6 @@ local function startJapaneseLoop(count, delay, isInfinite)
 
     task.spawn(function()
         while runningJapanese and (infiniteJapanese or teleportsLeftJapanese > 0) do
-            
             executeCycle(JAPANESE_CFRAME, delayTimeJapanese)
             
             if not infiniteJapanese and teleportsLeftJapanese > 0 then
@@ -217,7 +212,7 @@ local Window = StellarLibrary:Window({
 local MainTab = Window:Tab("MAIN", "rbxassetid://6032049611")
 local TaranjangTab = Window:Tab("Mount Taranjang", "rbxassetid://10723407389")
 local JapaneseTab = Window:Tab("Mount Japanese", "rbxassetid://10723407389")
-local SibuatanTab = Window:Tab("Mount Sibuatan", "rbxassetid://10723407389") -- NEW TAB
+local SibuatanTab = Window:Tab("Mount Sibuatan", "rbxassetid://10723407389") -- TAB BARU
 
 -- 4. KONTROL UMUM DI TAB MAIN
 MainTab:Seperator("General Control");
@@ -229,11 +224,13 @@ MainTab:Line();
 MainTab:Button("STOP SEMUA LOOP", function()
     stopTaranjangLoop();
     stopJapaneseLoop();
-    stopSibuatanLoop(); -- ADDED
+    stopSibuatanLoop(); -- MEMASTIKAN SIBUATAN JUGA DIHENTIKAN
 end);
 
--- 5. MENAMBAHKAN KONTROL AUTO SUMMIT KE TAB TARANJANG (SAMA SEPERTI SEBELUMNYA)
+-- 5. KONTROL AUTO SUMMIT TARANJANG (TIDAK BERUBAH)
 TaranjangTab:Seperator("Auto Summit Taranjang Settings by " .. Author);
+
+-- TOGGLE INFINITE MASIH ADA
 TaranjangTab:Toggle("INFINITE SUMMIT", false, function(state)
     infiniteTaranjang = state
     TeleportCountTextboxTaranjang:SetDisabled(state)
@@ -273,7 +270,7 @@ TaranjangTab:Button("STOP AUTO LOOP", function()
 end);
 
 ---
---- KONTROL UNTUK MOUNT JAPANESE (SAMA SEPERTI SEBELUMNYA)
+--- KONTROL UNTUK MOUNT JAPANESE (TIDAK BERUBAH)
 ---
 
 JapaneseTab:Seperator("Auto Summit Japanese Settings by " .. Author);
@@ -317,11 +314,12 @@ end);
 
 
 -- ===================================================================
--- KONTROL UNTUK MOUNT SIBUATAN (DUPLIKASI DAN PENYESUAIAN)
+-- KONTROL UNTUK MOUNT SIBUATAN (BARU)
 -- ===================================================================
 
 SibuatanTab:Seperator("Auto Summit Sibuatan Settings by " .. Author);
 
+-- TOGGLE INFINITE SIBUATAN
 SibuatanTab:Toggle("INFINITE SUMMIT", false, function(state)
     infiniteSibuatan = state
     TeleportCountTextboxSibuatan:SetDisabled(state)
